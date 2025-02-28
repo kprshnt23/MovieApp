@@ -28,8 +28,14 @@ const Home: React.FC = () => {
     fetchPopular,
     fetchTopRated,
     fetchUpcoming,
+    fetchMoreNowPlaying,
+    fetchMorePopular,
+    fetchMoreTopRated,
+    fetchMoreUpcoming,
   } = useMovieStore();
+
   const [activeCategory, setActiveCategory] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchMoviesByCategory = (categoryId: number) => {
     switch (categoryId) {
@@ -50,36 +56,54 @@ const Home: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('Now Playing:', nowPlaying);
-    console.log('Popular:', popular);
-    console.log('Top Rated:', topRated);
-    console.log('Upcoming:', upcoming);
-  }, [nowPlaying, popular, topRated, upcoming]);
+  const fetchMoreMovies = () => {
+    switch (activeCategory) {
+      case 1:
+        fetchMoreNowPlaying();
+        break;
+      case 2:
+        fetchMorePopular();
+        break;
+      case 3:
+        fetchMoreTopRated();
+        break;
+      case 4:
+        fetchMoreUpcoming();
+        break;
+    }
+  };
 
   useEffect(() => {
     fetchMoviesByCategory(activeCategory);
   }, [activeCategory]);
 
   const getMovies = () => {
+    let movies = [];
     switch (activeCategory) {
       case 1:
-        return nowPlaying;
+        movies = nowPlaying;
+        break;
       case 2:
-        return popular;
+        movies = popular;
+        break;
       case 3:
-        return topRated;
+        movies = topRated;
+        break;
       case 4:
-        return upcoming;
+        movies = upcoming;
+        break;
       default:
-        return nowPlaying;
+        movies = nowPlaying;
     }
+    return movies.filter(movie =>
+      movie.title.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
   };
 
   return (
     <View style={styles.container}>
       <Header />
-      <SearchBar onChangeText={() => {}} value="" />
+      <SearchBar onChangeText={setSearchQuery} value={searchQuery} />
       <Categories
         activeIndex={activeCategory}
         onCategoryChange={setActiveCategory}
@@ -94,7 +118,7 @@ const Home: React.FC = () => {
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
         contentContainerStyle={styles.contentContainer}
-        onEndReached={() => fetchMoviesByCategory(activeCategory)}
+        onEndReached={fetchMoreMovies}
         onEndReachedThreshold={0.5}
       />
     </View>
@@ -135,13 +159,6 @@ const styles = StyleSheet.create({
   },
   columnWrapper: {
     justifyContent: 'space-between',
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#FFFFFF',
   },
   card: {
     width: '48%',
