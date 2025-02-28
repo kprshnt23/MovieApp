@@ -8,7 +8,7 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
-  placeholder = 'Search...',
+  placeholder = 'Search movies...',
   value,
   onChangeText,
 }) => {

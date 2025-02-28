@@ -4,7 +4,7 @@ import {View, StyleSheet, Text} from 'react-native';
 const Header: React.FC = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🎥 TMDB 📸</Text>
+      <Text style={styles.title}>MOVIES APP 🎥 </Text>
     </View>
   );
 };
@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     height: 60,
     backgroundColor: '#1E1E1E',
     paddingHorizontal: 16,
